@@ -2,7 +2,7 @@ function scriptdialog()
             local packet =
             "\nadd_label_with_icon|small|Emazet Proxy Growpai 1.0|left|3524|\n" ..
             "\nadd_spacer|small|" ..    
-            "\nadd_url_button|emazet|`cDiscord Server : |noflags|https://discord.gg/ZApxzCN8qu|Join Discord Server|0|0|"..
+            "\nadd_url_button|emazet|`cDiscord Server : Join Here|noflags|https://discord.gg/ZApxzCN8qu|Join Discord Server|0|0|"..
             "\nadd_spacer|small|" ..
             "\nadd_url_button|emazet|`2Whatsapp `0Group `4Indonesia|noflags|https://chat.whatsapp.com/Fiko7ucIGBq0abg6wv6mpU|Would You Join Whatsapp Group ?|0|0|"..
             "\nadd_spacer|small|" ..
