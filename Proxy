@@ -1,0 +1,50 @@
+function scriptdialog()
+            local packet =
+            "\nadd_label_with_icon|small|Emazet Proxy Growpai 1.0|left|3524|\n" ..
+            "\nadd_spacer|small|" ..    
+            "\nadd_url_button|emazet|`cDiscord Server : |noflags|https://discord.gg/ZApxzCN8qu|Join Discord Server|0|0|"..
+            "\nadd_spacer|small|" ..
+            "\nadd_url_button|emazet|`2Whatsapp `0Group `4Indonesia|noflags|https://chat.whatsapp.com/Fiko7ucIGBq0abg6wv6mpU|Would You Join Whatsapp Group ?|0|0|"..
+            "\nadd_spacer|small|" ..
+            "\nadd_textbox|`4Note : Don't Use Capslock Or Script Not Work|left|2480|" ..
+            "\nadd_spacer|small|" ..
+            "\nadd_label_with_icon|small|`bMain|left|7188|" ..
+            "\nadd_textbox|`2/script [show this menu]|left|2480|" ..
+            "\nadd_textbox|`2/cd [Amount] [Drop Custom]|left|2480|" ..
+            "\nadd_textbox|`2/d [Amount] [Drop DL]|left|2480|" ..
+            "\nadd_textbox|`2/daw [Drop All Locks]|left|2480|" ..
+            "\nadd_textbox|`2/cbgl [Toggle Fast Change BGLs]|left|2480|" ..
+            "\nadd_textbox|`2/split [Percentage] [Split Your WL DL BGL]|left|2480|" ..
+            "\nadd_textbox|`2/wm [pull/kick/Ban] [Wrench Mode]|left|2480|" ..
+            "\nadd_textbox|`2/fw [Fast Wrench Toggle] |left|2480|" ..
+            "\nadd_textbox|`2/gems [Show Amount Of Gems You Collect After 1 Second]|left|2480|" ..
+            "\nadd_spacer|small|" ..
+            "\nadd_label_with_icon|small|`bAutohoster|left|758|" ..
+            "\nadd_textbox|`2/game [Amount] [Set Amount For Host]|left|2480|" ..
+            "\nadd_textbox|`2/tp [Take Bet In Pos 1 & Pos 2]|left|2480|" ..
+            "\nadd_textbox|`2/tax [Tax Count]|left|2480|" ..
+            "\nadd_textbox|`2/pos1 [Set Position 1]|left|2480|" ..
+            "\nadd_textbox|`2/pos1 [Set Position 2]|left|2480|" ..
+            "\nadd_textbox|`2/win1 [Drop Bet To Pos 1 & Eat Tax]|left|2480|" ..
+            "\nadd_textbox|`2/win2 [Drop Bet To Pos 1 & Eat Tax]|left|2480|" ..
+            "\nadd_textbox|`2/gd [Drop Bet & Eat Tax]|left|2480|" ..
+            "\nadd_spacer|small|" ..
+            "\nadd_label_with_icon|small|`bOther|left|32|" ..
+            "\nadd_textbox|`2/cdl [Toggle Fast Change DL On Telephone]|left|2480|" ..
+            "\nadd_textbox|`2/autofarm [fast PNB 1 Block]|left|2480|" ..
+            "\nadd_textbox|`2/back [Join Previous World]|left|2480|" ..
+            "\nadd_textbox|`2/relog [Fast Relog Account]|left|2480|" ..
+            "\nadd_textbox|`2/spam [Text] [Set Text For Spam]|left|2480|" ..
+            "\nadd_textbox|`2/spamdelay [Delay] [Set Spam Delay In Milisecond]|left|2480|" ..
+            "\nadd_textbox|`2/autospam [Start / Stop Spam]|left|2480|" ..
+            "\nadd_textbox|`2/spamonce [Spam Text Once]|left|2480|" ..
+            "\nadd_textbox|`2/autopull [Shortcut Auto Pull]|left|2480|" ..
+            "\nadd_textbox|`2/pj [Pull Last People Join]|left|2480|" ..
+            "add_spacer|small\nadd_quick_exit|\nend_dialog|optionlsls|`#@emazet17|"
+            local var = {} --make table
+            var[0] = "OnDialogRequest"
+            var[1] = packet
+            var.netid = -1 --need to put netid or it doesn't work
+            SendVarlist(var)
+        end
+        scriptdialog()
