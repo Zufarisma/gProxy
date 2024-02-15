@@ -1,0 +1,445 @@
+function makenotification(text)
+    local var = {}
+    var[0] = "OnAddNotification"
+    var[1] = "interface/science_button.rttex"
+    var[2] = text
+    var[3] = "audio/bell.wav"
+    var.netid = -1 --need to put netid or it doesn't work
+    SendVarlist(var)
+end
+
+function scriptdialog()
+    local packet =
+    "\nadd_label_with_icon|small|Emazet Proxy Growpai 1.0|left|3524|\n" ..
+    "\nadd_spacer|small|" ..    
+    "\nadd_url_button|emazet|`cDiscord Server : Join Here|noflags|https://discord.gg/vmKjg7qbz7|Join Discord Server|0|0|"..
+    "\nadd_spacer|small|" ..
+    "\nadd_textbox|`4Note : Don't Use Capslock Or Script Not Work|left|2480|" ..
+    "\nadd_spacer|small|" ..
+    "\nadd_label_with_icon|small|`bMain|left|7188|" ..
+    "\nadd_textbox|`2/proxy [show this menu]|left|2480|" ..
+    "\nadd_textbox|`2/cd [Amount] [Drop Custom]|left|2480|" ..
+    "\nadd_textbox|`2/d [Amount] [Drop DL]|left|2480|" ..
+    "add_spacer|small\nadd_quick_exit|\nend_dialog|optionlsls|`#@emazet17|"
+    local var = {} --make table
+    var[0] = "OnDialogRequest"
+    var[1] = packet
+    var.netid = -1 --need to put netid or it doesn't work
+    SendVarlist(var)
+end
+
+AddCallback("commandsss", "OnPacket", function (type, packet)
+    if (type == 2 and packet:find("/script")) then
+        RunThread(function()
+            scriptdialog()
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/wm ")) then
+        RunThread(function()
+            local args = split(packet ," ")
+            wrenchmode = args[2]
+            log("Wrench Mode set to " .. wrenchmode)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/fw")) then
+        RunThread(function()
+            if fastwrench == true then
+                fastwrench = false
+                log("Fast Wrench off")
+            else
+                fastwrench = true
+                log("Fast Wrench on")
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/cd ")) then
+        RunThread(function()
+            local args = split(packet ," ")
+            cdrop(args[2])
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/d ")) then
+        RunThread(function()
+            local args = split(packet ," ")
+            cdrop(args[2] * 100)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/gems")) then
+        RunThread(function()
+            if gemdetector then
+                gemdetector = false
+                log("Gems Detector Off")
+            else
+                gemdetector = true
+                log("Gems Detector On")
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/daw")) then
+        RunThread(function()
+            shouldCancel = true
+            for _, item in pairs(GetInventory()) do
+                if (item.id == 242) then
+                    SendPacket(2,"action|drop\n|itemID|242")
+                    SendPacket(2,"action|dialog_return\ndialog_name|drop\nitem_drop|242|\nitem_count|".. item.count)
+                    log("Dropped " .. tostring(item.count) .. " world Locks")
+                    Sleep(75)
+                end
+                if (item.id == 1796) then
+                    SendPacket(2,"action|drop\n|itemID|1796")
+                    SendPacket(2,"action|dialog_return\ndialog_name|drop\nitem_drop|1796|\nitem_count|".. item.count)
+                    log("Dropped " .. tostring(item.count) .. " Diamond Locks")
+                    Sleep(75)
+                end
+                if (item.id == 7188) then
+                    SendPacket(2,"action|drop\n|itemID|7188")
+                    SendPacket(2,"action|dialog_return\ndialog_name|drop\nitem_drop|7188|\nitem_count|".. item.count)
+                    log("Dropped " .. tostring(item.count) .. " Blue Gem Locks")
+                    Sleep(75)
+                end
+            end
+            Sleep(500)
+            shouldCancel = false
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/cbgl")) then
+        RunThread(function()
+            if fasttelephone == true then
+                fasttelephone = false
+                log("Fast Telephone off")
+            else
+                fasttelephone = true
+                log("Fast Telephone on")
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/cdl")) then
+        RunThread(function()
+            if fastbuydl == true then
+                fastbuydl = false
+                log("Fast change dl off")
+            else
+                fastbuydl = true
+                log("Fast change dl on")
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/autofarm")) then
+        if autofarm == true then
+            autofarm = false
+            log("Autofarm off")
+        else
+            autofarm = true
+            log("Autofarm on")
+        end
+        RunThread(function()
+            posx = GetLocal().pos_x // 32
+            posy = GetLocal().pos_y // 32
+            while (autofarm) do
+                place(posx - 1, posy - 1, 5640)
+                Sleep(150)
+                place(posx, posy - 1, 5640)
+                Sleep(150)
+                place(posx + 1, posy - 1, 5640)
+                Sleep(150)
+                punch(posx - 1, posy - 1)
+                Sleep(200)
+                punch(posx, posy - 1)
+                Sleep(200)
+                punch(posx + 1, posy - 1)
+                Sleep(200)
+            end
+        end)
+        return true
+    end
+
+    -- AUTO HOST
+    if (type == 2 and packet:find("/game ")) then
+        local args = split(packet ," ")
+        currentgame = args[2]
+        log("`9Game: " .. currentgame .. "WL vs " .. currentgame .. "WL | Tax Is " .. tax(args[2] * 2, gtax) .. "WL!")
+        makenotification("`9Game: " .. currentgame .. "WL vs " .. currentgame .. "WL | Tax Is " .. tax(args[2] * 2, gtax) .. "WL!")
+        return true
+    end
+
+    if (type == 2 and packet:find("/tp")) then
+        if pos1_x == 0 and pos2_x == 0 then
+            log("`5Set pos1 and pos2 first")
+            return true
+        end
+
+        RunThread(function()
+            -- set variables
+        pos1dropped = 0
+        pos2dropped = 0
+
+        oid1 = "0-"
+        oid2 = "0-"
+
+        -- check both pos
+        for index,i in pairs(GetObjects()) do
+            if i.pos_x // 32 == pos1_x and i.pos_y // 32 == pos1_y then
+                if i.id == 242.0 then
+                    pos1dropped = pos1dropped + i.count
+                end
+                if i.id == 1796.0 then
+                    pos1dropped = pos1dropped + i.count * 100
+                end
+                if i.id == 7188.0 then
+                    pos1dropped = pos1dropped + i.count * 10000
+                end
+            end
+            if i.pos_x // 32 == pos2_x and i.pos_y // 32 == pos2_y then
+                if i.id == 242.0 then
+                    pos2dropped = pos2dropped + i.count
+                end
+                if i.id == 1796.0 then
+                    pos2dropped = pos2dropped + i.count * 100
+                end
+                if i.id == 7188.0 then
+                    pos2dropped = pos2dropped + i.count * 10000
+                end
+            end
+            --log(i.pos_x // 32 .. " - " .. i.pos_y // 32 .. " - " .. i.count .. " - " .. i.id)
+        end
+        pos1dropped = math.floor(pos1dropped)
+        pos2dropped = math.floor(pos2dropped)
+
+        if pos1dropped ~= pos2dropped then
+            log("`5Not same amount. " .. pos1dropped .. "wl vs " .. pos2dropped .. "wl.")
+            overlayText("`5Not same amount. " .. pos1dropped .. "wl vs " .. pos2dropped .. "wl.")
+            return true
+        end
+        log("`5Game: " .. pos1dropped .. "wl vs " .. pos2dropped .. "wl | Tax is " .. tax(pos2dropped * 2, gtax) .. "wl!")
+        overlayText("`5Game: " .. pos1dropped .. "wl vs " .. pos2dropped .. "wl | Tax is " .. tax(pos2dropped * 2, gtax) .. "wl!")
+        currentgame = pos1dropped
+        curx = GetLocal().pos_x // 32
+        cury = GetLocal().pos_y // 32
+        collect(pos1_x, pos1_y)
+        collect(pos2_x, pos2_y)
+        --FindPath(pos1_x, pos1_y)
+        --Sleep(350)
+        --FindPath(pos2_x, pos2_y)
+        --Sleep(350)
+       -- FindPath(curx, cury)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/tax ")) then
+        local args = split(packet ," ")
+        gtax = tonumber(args[2])
+        log("`5Set tax to " .. gtax .. "%.")
+        return true
+    end
+
+    if (type == 2 and packet:find("/pos1")) then
+        pos1_x = GetLocal().pos_x // 32
+        pos1_y = GetLocal().pos_y // 32
+        log("`5Set pos1 to x: " .. pos1_x .. " y: " .. pos1_y)
+        return true
+    end
+
+    if (type == 2 and packet:find("/pos2")) then
+        pos2_x = GetLocal().pos_x // 32
+        pos2_y = GetLocal().pos_y // 32
+        log("`5Set pos2 to x: " .. pos2_x .. " y: " .. pos2_y)
+        return true
+    end
+
+    if (type == 2 and packet:find("/win1")) then
+        if pos1_x == 0 and pos2_x == 0 or currentgame == 0 then
+            log("`5Set pos1 and pos2 and game amount first")
+            return true
+        end
+        RunThread(function()
+            curx = GetLocal().pos_x // 32
+            cury = GetLocal().pos_y // 32
+
+            FindPath(pos1_x, pos1_y)
+            Sleep(325)
+            cdrop(currentgame * 2 - tax(currentgame * 2, gtax))
+            Sleep(50)
+            FindPath(curx, cury)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/win2")) then
+        if pos1_x == 0 and pos2_x == 0 or currentgame == 0 then
+            log("Set pos1 and pos2 and game amount first")
+            return true
+        end
+        RunThread(function()
+            curx = GetLocal().pos_x // 32
+            cury = GetLocal().pos_y // 32
+
+            FindPath(pos2_x, pos2_y)
+            Sleep(325)
+            cdrop(currentgame * 2 - tax(currentgame * 2, gtax))
+            Sleep(50)
+            FindPath(curx, cury)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/gd") or packet:find("/gdrop")) then
+        if currentgame == 0 then
+            log("Set /game first")
+            return true
+        end
+        RunThread(function()
+            cdrop(currentgame * 2 - tax(currentgame * 2, gtax))
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/split ")) then
+        local args = split(packet ," ")
+        splitpercentage = args[2]
+        RunThread(function()
+            local inventorywls = 0
+            for _, item in pairs(GetInventory()) do
+                if (item.id == 242) then
+                    inventorywls = inventorywls + item.count
+                end
+                if (item.id == 1796) then
+                    inventorywls = inventorywls + item.count * 100
+                end
+                if (item.id == 7188) then
+                    inventorywls = inventorywls + item.count * 10000
+                end
+            end
+            cdrop(tax(inventorywls, splitpercentage))
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/back")) then
+        RunThread(function()
+            SendPacket(3, "action|join_request\nname|" .. lastjoinedworld)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/relog")) then
+        curworld = GetLocal().world
+        RunThread(function()
+            SendPacket(3, "action|join_request\nname|EXIT")
+            Sleep(500)
+            SendPacket(3, "action|join_request\nname|" .. curworld)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/autopull")) then
+        RunThread(function()
+            if autopull then
+                autopull = false
+                log("Autopull off")
+            else
+                autopull = true
+                log("Autopull on")
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/pj")) then
+        RunThread(function()
+            netiddd = lastjoinednetid
+            SendPacket(2, "action|wrench\n|netid|" .. netiddd)
+            SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. netiddd .. "|\nnetID|" .. netiddd .. "|\nbuttonClicked|pull")
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/spj")) then
+        if shouldSpj then
+            shouldSpj = false
+            log("Spam pull last joined off")
+        else
+            shouldSpj = true
+            log("Spam pull last joined on")
+        end
+        RunThread(function()
+            while shouldSpj do
+                netiddd = lastjoinednetid
+                SendPacket(2, "action|wrench\n|netid|" .. netiddd)
+                SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. netiddd .. "|\nnetID|" .. netiddd .. "|\nbuttonClicked|pull")
+                Sleep(50)
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/spam ")) then
+        autospamtext = string.sub(packet, 26, 125)
+        log("Set auto spam text to: " .. autospamtext)
+        return true
+    end
+
+    if (type == 2 and packet:find("/spamdelay ")) then
+        local args = split(packet ," ")
+        autospamdelay = args[2]
+        log("Set auto spam delay to: " .. autospamdelay)
+        return true
+    end
+
+    if (type == 2 and packet:find("/autospam")) then
+        RunThread(function()
+            if autospam then
+                autospam = false
+                log("Autospam off")
+            else
+                autospam = true
+                log("Autospam on")
+                startspam()
+            end
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/spamonce")) then
+        chat(autospamtext)
+        return true
+    end
+
+    -- FAST WRENCH
+    if (packet:find("action|wrench")) then
+        netid2 = tonumber(string.sub(packet,22,30))
+        if fastwrench and netid2 ~= GetLocal().netid then
+            if (wrenchmode:find("pull")) then
+                SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. netid2 .. "|\nnetID|" .. netid2 .. "|\nbuttonClicked|pull")
+            elseif (wrenchmode:find("kick")) then
+                SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. netid2 .. "|\nnetID|" .. netid2 .. "|\nbuttonClicked|kick")
+            elseif (wrenchmode:find("ban")) then
+                SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. netid2 .. "|\nnetID|" .. netid2 .. "|\nbuttonClicked|ban")
+            end
+            return true
+        end
+    end
+
+    if (packet:find("action|join_request")) then
+        lastjoinedworld = GetLocal().world
+    end
+end)
+scriptdialog()
