@@ -1,0 +1,176 @@
+function makenotification(text)
+    local var = {}
+    var[0] = "OnAddNotification"
+    var[1] = "interface/science_button.rttex"
+    var[2] = text
+    var[3] = "audio/bell.wav"
+    var.netid = -1 --need to put netid or it doesn't work
+    SendVarlist(var)
+end
+
+function split(pString, pPattern)
+    local Table = {}  -- NOTE: use {n = 0} in Lua-5.0
+    local fpat = "(.-)" .. pPattern
+    local last_end = 1
+    local s, e, cap = pString:find(fpat, 1)
+    while s do
+       if s ~= 1 or cap ~= "" then
+      table.insert(Table,cap)
+       end
+       last_end = e+1
+       s, e, cap = pString:find(fpat, last_end)
+    end
+    if last_end <= #pString then
+       cap = pString:sub(last_end)
+       table.insert(Table, cap)
+    end
+    return Table
+end
+
+function cdrop(count)
+    shouldCancel = true
+    tonumber(count)
+    local divide = string.format("%.2f", count / 100)
+    local locksplit = split(divide,".")
+    local wl = count % 100
+    local dl = math.floor(count / 100) % 100
+    local bgl = math.floor(count / 10000)
+
+    -- GET INVENTORY
+    local dlinventory = 0
+    local wlinventory = 0
+    local bglinventory = 0
+
+    for _, item in pairs(GetInventory()) do
+        if (item.id == 242) then
+            wlinventory = item.count
+        end
+        if (item.id == 1796) then
+            dlinventory = item.count
+        end
+        if (item.id == 7188) then
+            bglinventory = item.count
+        end
+    end
+
+    -- DROP
+    if bgl ~= 0 then
+        SendPacket(2,"action|drop\n|itemID|7188")
+        SendPacket(2,"action|dialog_return\ndialog_name|drop_item\n|7188|\nitem_count|".. bgl)
+        log("Dropped " .. tostring(bgl) .. " Blue Gem Locks")
+        Sleep(150)
+    end
+    if dl ~= 0 then
+        if dlinventory < dl and bglinventory > bgl then
+            shatter(7188)
+        end
+        SendPacket(2,"action|drop\n|itemID|1796")
+        SendPacket(2,"action|dialog_return\ndialog_name|drop_item\n|1796|\nitem_count|".. dl)
+        log("Dropped " .. tostring(dl) .. " Diamond Locks")
+        Sleep(150)
+    end
+    if wl ~= 0 then
+        if wlinventory < wl and dlinventory > dl then
+            shatter(1796)
+        end
+        SendPacket(2 ,"action|drop\n|itemID|242")
+        SendPacket(2 ,"action|dialog_return\ndialog_name|drop_item\nitemID|242|\ncount|".. wl)
+        log("Dropped " .. tostring(wl) .. " World Locks")
+        Sleep(150)
+    end
+    Sleep(200)
+    shouldCancel = false
+end
+
+function scriptdialog()
+    local packet =
+    "\nadd_label_with_icon|small|Emazet Proxy Growpai 1.0|left|3524|\n" ..
+    "\nadd_spacer|small|" ..    
+    "\nadd_url_button|emazet|`cDiscord Server : Join Here|noflags|https://discord.gg/vmKjg7qbz7|Join Discord Server|0|0|"..
+    "\nadd_spacer|small|" ..
+    "\nadd_textbox|`4Note : Don't Use Capslock Or Script Not Work|left|2480|" ..
+    "\nadd_spacer|small|" ..
+    "\nadd_label_with_icon|small|`bMain Commands|left|7188|" ..
+    "\nadd_textbox|`2/proxy [show this menu]|left|2480|" ..
+    "\nadd_textbox|`2/cd [Amount] [Drop Custom]|left|2480|" ..
+    "\nadd_textbox|`2/dw [Amount] [Drop WL]|left|2480|" ..
+    "\nadd_textbox|`2/dd [Amount] [Drop DL]|left|2480|" ..
+    "\nadd_textbox|`2/daw [Amount] [Drop All Lock]|left|2480|" ..
+    "add_spacer|small\nadd_quick_exit|\nend_dialog|optionlsls|`#@emazet17|"
+    local var = {} --make table
+    var[0] = "OnDialogRequest"
+    var[1] = packet
+    var.netid = -1 --need to put netid or it doesn't work
+    SendVarlist(var)
+end
+
+AddCallback("commandsss", "OnPacket", function (type, packet)
+    if (type == 2 and packet:find("/proxy")) then
+        RunThread(function()
+            scriptdialog()
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/cd ")) then
+        RunThread(function()
+            local args = split(packet ," ")
+            cdrop(args[2])
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/dw ")) then
+        RunThread(function()
+            local args = split(packet ," ")
+            cdrop(args[2])
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/dd ")) then
+        RunThread(function()
+            local args = split(packet ," ")
+            cdrop(args[2] * 100)
+        end)
+        return true
+    end
+
+    if (type == 2 and packet:find("/daw")) then
+        RunThread(function()
+            shouldCancel = true
+            for _, item in pairs(GetInventory()) do
+                if (item.id == 242) then
+                    SendPacket(2,"action|drop\n|itemID|242")
+                    SendPacket(2,"action|dialog_return\ndialog_name|drop_item\n|242|\nitem_count|".. item.count)
+                    log("Dropped " .. tostring(item.count) .. " world Locks")
+                    Sleep(75)
+                end
+                if (item.id == 1796) then
+                    SendPacket(2,"action|drop\n|itemID|1796")
+                    SendPacket(2,"action|dialog_return\ndialog_name|drop_item\n|1796|\nitem_count|".. item.count)
+                    log("Dropped " .. tostring(item.count) .. " Diamond Locks")
+                    Sleep(75)
+                end
+                if (item.id == 7188) then
+                    SendPacket(2,"action|drop\n|itemID|7188")
+                    SendPacket(2,"action|dialog_return\ndialog_name|drop_item\n|7188|\nitem_count|".. item.count)
+                    log("Dropped " .. tostring(item.count) .. " Blue Gem Locks")
+                    Sleep(75)
+                end
+            end
+            Sleep(500)
+            shouldCancel = false
+        end)
+        return true
+    end
+end)
+
+AddCallback("onvarlist", "OnVarlist", function(vlist)
+    if vlist[0]:find("OnDialogRequest") then
+        if vlist[1]:find("Drop World Lock") or vlist[1]:find("Drop Diamond Lock") or vlist[1]:find("Drop Blue Gem Lock") and shouldCancel then
+            return true
+        end
+    end
+end)
+scriptdialog()
