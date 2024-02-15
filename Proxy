@@ -34,6 +34,5 @@ AddCallback("commandsss", "OnPacket", function (type, packet)
             scriptdialog()
         end)
         return true
-    end
-)
+    end)
 scriptdialog()
